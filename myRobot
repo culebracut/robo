@@ -52,32 +52,31 @@ async def jsEvent(dev):
             speed   = round(scale_js_Y(yAxis),2)
             torque  = round(scale_js_X(xAxis),2)
 
-            #if (speed == 0.0 and torque == 0.0):
             # stop when speed approx zero
             if (speed > -zeroSpeedOffset and speed < zeroSpeedOffset):
                 robot.stop()
-            else:
-                # combine speed and torque 
-                leftMotorSpeed = speed
-                rightMotorSpeed = speed
+                continue
 
-                """ if (xAxis > midAxis):       # rotate right
-                    leftMotorSpeed  = round((leftMotorSpeed  + torque), 2)
-                    rightMotorSpeed = round((rightMotorSpeed - torque), 2)
-                else:                       # rotate left
-                    leftMotorSpeed  =  round((leftMotorSpeed  - torque), 2)
-                    rightMotorSpeed =  round((rightMotorSpeed + torque), 2)
-            
-                if   (leftMotorSpeed > 1):  leftMotorSpeed = 1
-                elif (leftMotorSpeed < -1): leftMotorSpeed = -1
-                elif (rightMotorSpeed > 1): rightMotorSpeed = 1
-                elif (rightMotorSpeed < -1): rightMotorSpeed = -1 """
-            
-                # forward
-                robot.forward(leftMotorSpeed)
+            # combine speed and torque 
+            leftMotorSpeed = speed
+            rightMotorSpeed = speed
 
-            print(repr(ev))
-            print(leftMotorSpeed, rightMotorSpeed)
+            if (xAxis > midAxis):       # rotate right
+                leftMotorSpeed  = round((leftMotorSpeed  + torque), 2)
+                rightMotorSpeed = round((rightMotorSpeed - torque), 2)
+            else:                           # rotate left
+                leftMotorSpeed  =  round((leftMotorSpeed  - torque), 2)
+                rightMotorSpeed =  round((rightMotorSpeed + torque), 2)
+        
+            if   (leftMotorSpeed > 1):  leftMotorSpeed = 1
+            elif (leftMotorSpeed < -1): leftMotorSpeed = -1
+            elif (rightMotorSpeed > 1): rightMotorSpeed = 1
+            elif (rightMotorSpeed < -1): rightMotorSpeed = -1
+            
+            # set motor speeds
+            robot.set_motors(leftMotorSpeed, rightMotorSpeed)
+
+            #print(repr(ev))
             print('x-axis: ', xAxis, '    y-axis:', yAxis, '    speed:',speed, '   torque:',  torque, '     left:', leftMotorSpeed, '    right:', rightMotorSpeed)
 
 # Init
